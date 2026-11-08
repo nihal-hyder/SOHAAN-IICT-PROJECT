@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeySense — Understand Your Password</title>
+  <meta name="description" content="A friendly guide to password security: check strength, spot weaknesses, generate examples and learn how to build stronger passwords. Everything runs in your browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="#top" class="logo">
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+          <circle cx="8" cy="13" r="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
+          <path d="M13.5 13H24M20 13v4M23 13v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        KeySense
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#checker">Checker</a>
+        <a href="#generator">Generator</a>
+        <a href="#learn">Learn</a>
+        <a href="#tips">Tips</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero wrap">
+      <p class="eyebrow">A small guide to password security</p>
+      <h1>How long would it take someone to <span class="scribble">guess</span> your password?</h1>
+      <p class="lead">
+        Type a password below and see how it holds up. You'll get a strength rating,
+        the weak spots an attacker would look for, and plain advice on fixing them.
+      </p>
+      <div class="privacy-note">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10V8a6 6 0 1 1 12 0v2m-13 0h14v11H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span><strong>Your password never leaves this page.</strong> All checks run in your browser. Nothing is saved, logged or sent anywhere. Even so, it's best to test a password that's <em>similar</em> to yours rather than the real one.</span>
+      </div>
+    </section>
+
+    <!-- CHECKER -->
+    <section id="checker" class="section wrap">
+      <div class="section-head">
+        <span class="num">01</span>
+        <h2>Password checker</h2>
+      </div>
+
+      <div class="checker-grid">
+        <div class="card checker-card">
+          <label for="pw" class="field-label">Try a password</label>
+          <div class="pw-field">
+            <input id="pw" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Start typing…" aria-describedby="strength-label">
+            <button type="button" id="toggle-pw" class="icon-btn" aria-label="Show password" title="Show / hide">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            </button>
+            <button type="button" id="clear-pw" class="icon-btn" aria-label="Clear" title="Clear">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="meter" aria-hidden="true">
+            <span class="seg"></span><span class="seg"></span><span class="seg"></span>
+          </div>
+
+          <div class="verdict">
+            <p id="strength-label" class="strength-label" aria-live="polite">Waiting for input</p>
+            <p id="strength-sub" class="strength-sub">Strength appears here as you type.</p>
+          </div>
+
+          <dl class="stats">
+            <div><dt>Length</dt><dd id="stat-length">0</dd></div>
+            <div><dt>Character types</dt><dd id="stat-types">0 / 4</dd></div>
+            <div><dt>Est. entropy</dt><dd id="stat-entropy">0 bits</dd></div>
+            <div><dt>Time to crack*</dt><dd id="stat-time">—</dd></div>
+          </dl>
+          <p class="footnote">* Rough estimate: an offline attacker trying 10 billion guesses per second. Real attacks vary.</p>
+        </div>
+
+        <div class="side-col">
+          <div class="card">
+            <h3>Requirements</h3>
+            <ul class="req-list" id="req-list">
+              <li data-req="length">At least 12 characters</li>
+              <li data-req="lower">A lowercase letter (a–z)</li>
+              <li data-req="upper">An uppercase letter (A–Z)</li>
+              <li data-req="digit">A number (0–9)</li>
+              <li data-req="symbol">A symbol (! @ # $ % …)</li>
+              <li data-req="common">Not a commonly used password</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Weaknesses found</h3>
+            <ul class="weak-list" id="weak-list">
+              <li class="muted">Nothing to report yet.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="levels">
+        <div class="level weak">
+          <span class="dot"></span>
+          <div><strong>Weak</strong><p>Could be guessed in seconds to hours. Common words, short length or obvious patterns.</p></div>
+        </div>
+        <div class="level medium">
+          <span class="dot"></span>
+          <div><strong>Medium</strong><p>Takes some effort to break but still within reach of a determined attacker.</p></div>
+        </div>
+        <div class="level strong">
+          <span class="dot"></span>
+          <div><strong>Strong</strong><p>Long, varied and unpredictable. Would take years or more to brute-force.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GENERATOR -->
+    <section id="generator" class="section wrap">
+      <div class="section-head">
+        <span class="num">02</span>
+        <h2>Example password generator</h2>
+      </div>
+      <p class="section-intro">Need inspiration? Generate a random example to see what a strong password looks like. Randomness comes from your browser's secure generator (<code>crypto.getRandomValues</code>).</p>
+
+      <div class="card gen-card">
+        <div class="tabs" role="tablist">
+          <button role="tab" class="tab active" data-mode="random" aria-selected="true">Random characters</button>
+          <button role="tab" class="tab" data-mode="phrase" aria-selected="false">Passphrase</button>
+        </div>
+
+        <div class="gen-output">
+          <output id="gen-result" class="mono">—</output>
+          <div class="gen-actions">
+            <button type="button" id="gen-copy" class="btn ghost">Copy</button>
+            <button type="button" id="gen-test" class="btn ghost">Test it</button>
+            <button type="button" id="gen-new" class="btn primary">Generate</button>
+          </div>
+        </div>
+        <p id="gen-strength" class="gen-strength"></p>
+
+        <div class="gen-options" id="opts-random">
+          <label class="range-row">
+            <span>Length: <strong id="len-val">16</strong></span>
+            <input type="range" id="gen-length" min="8" max="40" value="16">
+          </label>
+          <div class="checks">
+            <label><input type="checkbox" id="opt-lower" checked> Lowercase</label>
+            <label><input type="checkbox" id="opt-upper" checked> Uppercase</label>
+            <label><input type="checkbox" id="opt-digit" checked> Numbers</label>
+            <label><input type="checkbox" id="opt-symbol" checked> Symbols</label>
+            <label><input type="checkbox" id="opt-ambig"> Avoid look-alikes (l, 1, O, 0)</label>
+          </div>
+        </div>
+
+        <div class="gen-options hidden" id="opts-phrase">
+          <label class="range-row">
+            <span>Words: <strong id="words-val">4</strong></span>
+            <input type="range" id="gen-words" min="3" max="8" value="4">
+          </label>
+          <div class="checks">
+            <label>Separator
+              <select id="opt-sep">
+                <option value="-">hyphen  ( - )</option>
+                <option value=".">dot  ( . )</option>
+                <option value="_">underscore  ( _ )</option>
+                <option value=" ">space</option>
+              </select>
+            </label>
+            <label><input type="checkbox" id="opt-cap" checked> Capitalise words</label>
+            <label><input type="checkbox" id="opt-num" checked> Add a number</label>
+          </div>
+        </div>
+
+        <p class="footnote">These are examples for learning. If you use a generated password for real, store it in a password manager rather than writing it down.</p>
+      </div>
+    </section>
+
+    <!-- LEARN -->
+    <section id="learn" class="section wrap">
+      <div class="section-head">
+        <span class="num">03</span>
+        <h2>How to build a stronger password</h2>
+      </div>
+
+      <div class="learn-grid">
+        <ol class="steps">
+          <li>
+            <h3>Go long first</h3>
+            <p>Length matters more than anything else. Every extra character multiplies the number of guesses needed. Aim for <strong>12+ characters</strong>, or 16+ for important accounts.</p>
+          </li>
+          <li>
+            <h3>Mix character types</h3>
+            <p>Using lowercase, uppercase, numbers and symbols grows the "alphabet" an attacker has to search from 26 characters to around 94.</p>
+          </li>
+          <li>
+            <h3>Avoid the predictable</h3>
+            <p>Names, birthdays, pet names, football teams, <code>123</code>, <code>qwerty</code> and "password" are the first things attackers try. Swapping <code>a</code> for <code>@</code> doesn't fool them either.</p>
+          </li>
+          <li>
+            <h3>Try a passphrase</h3>
+            <p>Pick 4 or more <em>random, unrelated</em> words: <code>Cactus-Velvet-Orbit-Lantern</code>. Easy for you to remember, hard for a computer to guess.</p>
+          </li>
+          <li>
+            <h3>One account, one password</h3>
+            <p>If one site leaks, reused passwords let attackers walk into your other accounts. A password manager makes unique passwords painless.</p>
+          </li>
+        </ol>
+
+        <div class="card transform">
+          <h3>Watch a password grow up</h3>
+          <div class="evo">
+            <div class="evo-row"><code>alex</code><span class="tag weak">Weak</span></div>
+            <p class="evo-note">A single name. Cracked instantly.</p>
+            <div class="evo-row"><code>Alex2008</code><span class="tag weak">Weak</span></div>
+            <p class="evo-note">Name + year is one of the most common patterns.</p>
+            <div class="evo-row"><code>@l3x_2008!</code><span class="tag medium">Medium</span></div>
+            <p class="evo-note">Symbols help a bit, but it's still built on a guessable base.</p>
+            <div class="evo-row"><code>mango river 7 lazy kite</code><span class="tag strong">Strong</span></div>
+            <p class="evo-note">Random words with a number: long and memorable.</p>
+            <div class="evo-row"><code>Tq8#vLm2!xR9pZ4e</code><span class="tag strong">Strong</span></div>
+            <p class="evo-note">Fully random. Best kept in a password manager.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card weakness-table">
+        <h3>Common weaknesses, explained</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Weakness</th><th>Example</th><th>Why it's a problem</th></tr></thead>
+            <tbody>
+              <tr><td>Too short</td><td><code>cat12</code></td><td>Short passwords can be brute-forced by trying every combination.</td></tr>
+              <tr><td>Common password</td><td><code>123456</code>, <code>iloveyou</code></td><td>Attackers start with lists of millions of leaked passwords.</td></tr>
+              <tr><td>Keyboard pattern</td><td><code>qwerty</code>, <code>asdfgh</code></td><td>Patterns on the keyboard are well known and checked early.</td></tr>
+              <tr><td>Sequences</td><td><code>abcd</code>, <code>6789</code></td><td>Counting up or down adds almost no real randomness.</td></tr>
+              <tr><td>Repeated characters</td><td><code>aaaa</code>, <code>1111</code></td><td>Repeats make a password longer without making it harder.</td></tr>
+              <tr><td>Dates &amp; years</td><td><code>2008</code>, <code>15/08</code></td><td>Birthdays and years are easy to find on social media.</td></tr>
+              <tr><td>Simple substitutions</td><td><code>p@ssw0rd</code></td><td>Cracking tools automatically try these "leet" swaps.</td></tr>
+              <tr><td>Only one character type</td><td><code>sunshine</code></td><td>A smaller set of characters means fewer possible combinations.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIPS -->
+    <section id="tips" class="section wrap">
+      <div class="section-head">
+        <span class="num">04</span>
+        <h2>Everyday security tips</h2>
+      </div>
+
+      <div class="tips-grid">
+        <article class="tip">
+          <span class="tip-n">a.</span>
+          <h3>Use a password manager</h3>
+          <p>Apps like Bitwarden, 1Password or your browser's built-in manager remember strong, unique passwords so you don't have to.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">b.</span>
+          <h3>Turn on two-factor login</h3>
+          <p>2FA adds a second step, like a code from an app. Even if your password leaks, the attacker still can't get in.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">c.</span>
+          <h3>Watch out for phishing</h3>
+          <p>No real company will ask for your password by email or message. Check the website address before you log in.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">d.</span>
+          <h3>Never share passwords</h3>
+          <p>Not with friends, not over chat, not on sticky notes on your monitor. Shared passwords get passed around.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">e.</span>
+          <h3>Check for leaks</h3>
+          <p>Services such as <em>Have I Been Pwned</em> tell you if your email appeared in a data breach. Change those passwords first.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">f.</span>
+          <h3>Lock your devices</h3>
+          <p>Use a PIN, pattern or fingerprint on your phone and laptop, and log out of shared or school computers.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">g.</span>
+          <h3>Change after a breach</h3>
+          <p>You don't need to change passwords every month. Change them straight away if a site you use is hacked.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-n">h.</span>
+          <h3>Keep software updated</h3>
+          <p>Updates fix security holes. A strong password can't protect a device running years-old software.</p>
+        </article>
+      </div>
+
+      <div class="random-tip card">
+        <div>
+          <p class="eyebrow">Tip of the moment</p>
+          <p id="tip-text" class="tip-text">Loading a tip…</p>
+        </div>
+        <button type="button" id="tip-next" class="btn ghost">Another tip</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><strong>KeySense</strong> · An ICT project on password security.</p>
+      <p class="muted">No passwords are stored or transmitted. This page works fully offline once loaded.</p>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
